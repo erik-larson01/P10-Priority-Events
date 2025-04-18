@@ -222,7 +222,29 @@ public class PriorityEvents {
    * (no trailing newline). Must NOT modify the queue - use a deep copy of the queue instead.
    * @return a String representation of all events in sorted order
    */
+  @Override
   public String toString() {
     return ""; //TODO
   }
+
+  /**
+   * Heap definition of a node's parent
+   * @param i index of node
+   * @return the index of the parent
+   */
+  private int parent(int i) { return (i-1)/2; }
+
+  /**
+   * Heap definition of a node's left child
+   * @param i index of node
+   * @return the index of the left child
+   */
+  private int left(int i) { return 2*i + 1; }
+
+  /**
+   * Heap definition of a node's left child
+   * @param i index of node
+   * @return the index of the right child
+   */
+  private int right(int i) { return 2*i + 2; }
 }
