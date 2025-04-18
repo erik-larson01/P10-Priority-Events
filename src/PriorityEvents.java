@@ -155,6 +155,8 @@ public class PriorityEvents {
   /**
    * Inserts a new Event into the priority queue in the correct location in O(log N) time -> MUST
    * call one of the percolate helper methods
+   * CITE:  https://www.geeksforgeeks.org/priority-queue-using-binary-heap/ used this site's
+   * diagrams to help write this method
    * @param e the new Event to be added
    * @throws IllegalStateException if the queue is full
    * @throws IllegalArgumentException if the event is null or the Event is completed
@@ -198,6 +200,8 @@ public class PriorityEvents {
   /**
    * Removes the next (according to priority) Event from the priority queue, marks it as complete,
    * and appends it to the completed array. -> MUST call one of the percolate helper methods
+   * CITE:  https://www.geeksforgeeks.org/priority-queue-using-binary-heap/ used this site's
+   * diagrams to help write this method
    * @throws IllegalStateException if the queue is empty or the completed array is full
    */
   public void completeEvent() throws IllegalStateException{
