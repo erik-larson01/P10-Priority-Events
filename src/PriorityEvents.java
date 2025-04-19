@@ -133,9 +133,7 @@ public class PriorityEvents {
     Event[] copy = Arrays.copyOf(completed, completedSize);
     completedSize = 0;
 
-    for (int i = 0; i < completed.length; i++) {
-      completed[i] = null;
-    }
+    Arrays.fill(completed, null);
     return copy;
   }
 
@@ -179,7 +177,16 @@ public class PriorityEvents {
    * @throws IllegalArgumentException if the event is null or the Event is completed
    */
   public void addEvent(Event e) throws IllegalStateException, IllegalArgumentException {
-    //TODO
+    if (size == heapData.length) {
+      throw new IllegalStateException();
+    }
+
+    if (e == null || e.isComplete()) {
+      throw new IllegalArgumentException();
+    }
+
+    heapData[size] = e;
+    percolateUp(size);
   }
 
   /**
@@ -195,7 +202,31 @@ public class PriorityEvents {
    * @param i the index of the Event in heapData to be percolated
    */
   protected void percolateUp(int i) {
-    //TODO
+    // Base case: if the root is reached, stop the percolating.
+    // The percolating will stop also if the element is >= its parent
+    if (i == 0) {
+      return;
+    }
+
+    // Gets the parent index using private helper method
+    int parentIndex = parent(i);
+
+    // Boolean to store result of compareTo
+    boolean swap;
+
+    if (sortAlphabetically) {
+      swap = heapData[i].getDescription()
+          .compareTo(heapData[parentIndex].getDescription()) < 0;
+    } else {
+      swap = heapData[i].compareTo(heapData[parentIndex]) < 0;
+    }
+
+    // Recursive case: continue percolating up
+    // Swaps the index with the parent and then continues with the percolation with i = parentIndex
+    if (swap) {
+      swap(i, parentIndex);
+      percolateUp(parentIndex);
+    }
   }
 
   /**
@@ -211,7 +242,50 @@ public class PriorityEvents {
    * @param i the index of the Event in heapData to be percolated
    */
   protected void percolateDown(int i) {
-    //TODO
+    // Values of index i's children and the smallest child, which is initialized to i for a min-heap
+    int leftChild = left(i);
+    int rightChild = right(i);
+    int smallest = i;
+
+    // Check if there is a left child
+    if (leftChild < size) {
+      boolean leftIsSmaller;
+      // Compares the left child to the current smallest element
+      if (sortAlphabetically) {
+        leftIsSmaller = heapData[leftChild].getDescription()
+            .compareTo(heapData[smallest].getDescription()) < 0;
+      } else {
+        leftIsSmaller = heapData[leftChild].compareTo(heapData[smallest]) < 0;
+      }
+
+      // Updates the smallest index if the left child is smaller
+      if (leftIsSmaller) {
+        smallest = leftChild;
+      }
+    }
+
+    // Check if there is a right child
+    if (rightChild < size) {
+      boolean rightIsSmaller;
+      // Compares the right child to the current smallest element (could be the left child)
+      if (sortAlphabetically) {
+        rightIsSmaller = heapData[rightChild].getDescription()
+            .compareTo(heapData[smallest].getDescription()) < 0;
+      } else {
+        rightIsSmaller = heapData[rightChild].compareTo(heapData[smallest]) < 0;
+      }
+
+      // Updates the smallest index if the right child is smaller
+      if (rightIsSmaller) {
+        smallest = rightChild;
+      }
+    }
+
+    // Recursive case: If the smallest element is not the current element, swap and percolate down
+    if (smallest != i) {
+      swap(i, smallest);
+      percolateDown(smallest);
+    }
   }
 
   /**
@@ -222,7 +296,21 @@ public class PriorityEvents {
    * @throws IllegalStateException if the queue is empty or the completed array is full
    */
   public void completeEvent() throws IllegalStateException{
-    //TODO
+    if (isEmpty() || completedSize == completed.length) {
+      throw new IllegalStateException();
+    }
+
+    // Add root of heap (next event) to completed and mark as complete
+    Event nextEvent = heapData[0];
+    nextEvent.markAsComplete();
+    completed[completedSize] = nextEvent;
+    completedSize++;
+
+    // Move last element in the heap to the root and percolate down
+    heapData[0] = heapData[size - 1];
+    heapData[size - 1] = null;
+    size--;
+    percolateDown(0);
   }
 
   /**
@@ -274,4 +362,16 @@ public class PriorityEvents {
    * @return the index of the right child
    */
   private int right(int i) { return 2*i + 2; }
+
+  /**
+   * Swaps two elements in the heap array at the given indices.
+   *
+   * @param i index of the first element
+   * @param j index of the second element
+   */
+  private void swap(int i, int j) {
+    Event temp = heapData[i];
+    heapData[i] = heapData[j];
+    heapData[j] = temp;
+  }
 }
