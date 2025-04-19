@@ -17,6 +17,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -60,7 +61,13 @@ public class PriorityEvents {
    * @throws IllegalArgumentException if a capacity of 0 or less is provided
    */
   public PriorityEvents(int capacity) throws IllegalArgumentException {
-
+    if (capacity <= 0) {
+      throw new IllegalArgumentException();
+    }
+    heapData = new Event[capacity];
+    this.size = 0;
+    completed = new Event[capacity * 2];
+    sortAlphabetically = false;
   }
 
   /**
@@ -83,21 +90,21 @@ public class PriorityEvents {
    * @return true if this priority queue is ordered by description, false if it is ordered by timestamp
    */
   public static boolean isSortedAlphabetically() {
-    return false; //TODO
+    return sortAlphabetically;
   }
 
   /**
    * Sets all priority queues to be sorted alphabetically.
    */
   public static void sortAlphabetically() {
-
+    sortAlphabetically = true;
   }
 
   /**
    * Sets all priority queues to be sorted chronoloically (i.e., not alphabetically).
    */
   public static void sortChronologically() {
-
+    sortAlphabetically = false;
   }
 
   /**
@@ -106,7 +113,7 @@ public class PriorityEvents {
    * @return true if this priority queue contains any Events, false otherwise
    */
   public boolean isEmpty() {
-    return false; //TODO
+    return size == 0;
   }
 
   /**
@@ -115,7 +122,7 @@ public class PriorityEvents {
    * @return the number of Events in this priority queue
    */
   public int size() {
-    return  -1; //TODO
+    return heapData.length;
   }
 
   /**
@@ -123,7 +130,13 @@ public class PriorityEvents {
    * @return a deep copy of the contents of the completed array before clearing it out
    */
   public Event[] clearCompletedEvents() {
-    return new Event[1]; //TODO
+    Event[] copy = Arrays.copyOf(completed, completedSize);
+    completedSize = 0;
+
+    for (int i = 0; i < completed.length; i++) {
+      completed[i] = null;
+    }
+    return copy;
   }
 
   /**
@@ -131,7 +144,7 @@ public class PriorityEvents {
    * @return a deep copy of the contents of the completed array
    */
   protected Event[] getCompletedEvents() {
-    return new Event[1]; //TODO
+    return Arrays.copyOf(completed, completedSize);
   }
 
   /**
@@ -149,7 +162,11 @@ public class PriorityEvents {
    * @return a deep copy of the heapData array
    */
   protected Event[] getHeapData() {
-    return new Event[1]; //TODO
+    Event[] copiedHeapData = new Event[size];
+    for (int i = 0; i < size; i++) {
+      copiedHeapData[i] = heapData[i];
+    }
+    return copiedHeapData;
   }
 
   /**
@@ -214,7 +231,17 @@ public class PriorityEvents {
    * their corresponding sizes
    */
   protected PriorityEvents deepCopy() {
-    return new PriorityEvents(5); //TODO
+    PriorityEvents deepCopy = new PriorityEvents(this.heapData.length);
+
+    // Copy sizes
+    deepCopy.size = this.size;
+    deepCopy.completedSize = this.completedSize;
+
+    // Copy references
+    deepCopy.heapData = Arrays.copyOf(this.heapData, this.heapData.length);
+    deepCopy.completed = Arrays.copyOf(this.completed, this.completed.length);
+
+    return deepCopy;
   }
 
   /**
