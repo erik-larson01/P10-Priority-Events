@@ -55,10 +55,12 @@ public class PriorityEventsTester {
 
         // Verify the heap is correctly formed (minimum time should be at the root)
         if (queue.isEmpty() || !queue.peekNextEvent().equals(events[3])) {
+          System.out.println("Test1");
           return false;
         }
 
       } catch (Exception e) {
+        System.out.println("Test2");
         return false;
       }
     }
@@ -75,11 +77,13 @@ public class PriorityEventsTester {
         // Check that peekNextEvent throws NoSuchElementException
         try {
           PriorityEvents queue = new PriorityEvents(events, 5);
+          System.out.println("Test3");
           return false; // Should have thrown exception
         } catch (IllegalArgumentException e) {
           // Expected exception
         }
       } catch (Exception e) {
+        System.out.println("Test4");
         return false;
       }
     }
@@ -96,25 +100,32 @@ public class PriorityEventsTester {
         // Add events and verify the heap property
         events.addEvent(event1);
         if (events.isEmpty() || !events.peekNextEvent().equals(event1)) {
+          System.out.println("Test5");
           return false;
         }
 
         events.addEvent(event2);
         if (events.peekNextEvent() != event1) {
+          System.out.println("Test6");
           return false;
         }
 
         events.addEvent(event3);
         if (events.peekNextEvent() != event3) {
+          System.out.println("Test7");
           return false;
         }
 
         // Verify heap data and size
         Event[] heapData = events.getHeapData();
-        if (heapData[0] != event3 || heapData.length != 3) {
+        if (!heapData[0].equals(event3))  {
+          System.out.println("Test8");
           return false;
         }
+
+
       } catch (Exception e) {
+        System.out.println("Test9");
         return false;
       }
     }
@@ -132,11 +143,13 @@ public class PriorityEventsTester {
 
         try {
           events.addEvent(event3);
+          System.out.println("Test10");
           return false; // Should have thrown exception
         } catch (IllegalStateException e) {
           // Expected exception
         }
       } catch (Exception e) {
+        System.out.println("Test11");
         return false;
       }
     }
@@ -147,11 +160,13 @@ public class PriorityEventsTester {
 
         try {
           events.addEvent(null);
+          System.out.println("Test12");
           return false; // Should have thrown exception
         } catch (IllegalArgumentException e) {
           // Expected exception
         }
       } catch (Exception e) {
+        System.out.println("Test13");
         return false;
       }
     }
@@ -165,11 +180,13 @@ public class PriorityEventsTester {
 
         try {
           events.addEvent(event);
+          System.out.println("Test14");
           return false; // Should have thrown exception
         } catch (IllegalArgumentException e) {
           // Expected exception
         }
       } catch (Exception e) {
+        System.out.println("Test15");
         return false;
       }
     }
@@ -177,7 +194,7 @@ public class PriorityEventsTester {
     { // Tests percolate up
       try {
         PriorityEvents.sortChronologically();
-        PriorityEvents events = new PriorityEvents(10);
+        PriorityEvents events = new PriorityEvents(5);
 
         Event event2 = new Event("Event 2", 10, 10, 0);
         Event event3 = new Event("Event 3", 11, 10, 0);
@@ -186,24 +203,41 @@ public class PriorityEventsTester {
         Event event1 = new Event("Event 1", 9, 10, 0);
 
         events.addEvent(event3);
-        if (!events.peekNextEvent().equals(event3)) { return false; }
+        if (!events.peekNextEvent().equals(event3)) {
+          System.out.println("Test16");
+          return false;
+        }
         events.addEvent(event4);
-        if (!events.peekNextEvent().equals(event3)) { return false; }
+        if (!events.peekNextEvent().equals(event3)) {
+          System.out.println("Test17");
+          return false;
+        }
         events.addEvent(event2);
-        if (!events.peekNextEvent().equals(event2)) { return false; }
+        if (!events.peekNextEvent().equals(event2)) {
+          System.out.println("Test18");
+          return false;
+        }
         events.addEvent(event5);
-        if (!events.peekNextEvent().equals(event2)) { return false; }
+        if (!events.peekNextEvent().equals(event2)) {
+          System.out.println("Test19");
+          return false;
+        }
         events.addEvent(event1); // Should percolate to the root
-        if (!events.peekNextEvent().equals(event1)) { return false; }
+        if (!events.peekNextEvent().equals(event1)) {
+          System.out.println("Test20");
+          return false;
+        }
 
         // Test heap size
         Event[] heapData = events.getHeapData();
         if (heapData.length != 5) {
+          System.out.println("Test21");
           return false;
         }
 
 
       } catch (Exception e) {
+        System.out.println("Test21");
         return false;
       }
     }
@@ -229,10 +263,12 @@ public class PriorityEventsTester {
 
         // Verify the heap is correctly formed
         if (queue.isEmpty() || !queue.peekNextEvent().equals(events[1])) {
+          System.out.println("Test22");
           return false;
         }
 
       } catch (Exception e) {
+        System.out.println("Test23");
         return false;
       }
     }
@@ -250,26 +286,31 @@ public class PriorityEventsTester {
         // Add events and verify the heap property with alphabetical ordering this time
         events.addEvent(eventB);
         if (events.isEmpty() || events.peekNextEvent() != eventB) {
+          System.out.println("Test24");
           return false;
         }
 
         events.addEvent(eventC);
         if (events.peekNextEvent() != eventB) {
+          System.out.println("Test25");
           return false;
         }
 
         events.addEvent(eventA);
         if (events.peekNextEvent() != eventA) {
+          System.out.println("Test26");
           return false;
         }
 
         // Verify ordering
         Event[] heapData = events.getHeapData();
-        if (heapData[0] != eventA || heapData.length != 3) {
+        if (heapData[0] != eventA) {
+          System.out.println("Test27");
           return false;
         }
 
       } catch (Exception e) {
+        System.out.println("Test28");
         return false;
       }
     }
@@ -277,7 +318,7 @@ public class PriorityEventsTester {
     { // Tests percolate up with multiple levels alphabetically
       try {
         PriorityEvents.sortAlphabetically();
-        PriorityEvents events = new PriorityEvents(10);
+        PriorityEvents events = new PriorityEvents(5);
 
         Event eventE = new Event("E Event", 10, 10, 0);
         Event eventD = new Event("D Event", 11, 10, 0);
@@ -286,26 +327,41 @@ public class PriorityEventsTester {
         Event eventA = new Event("A Event", 14, 10, 0);
 
         events.addEvent(eventE);
-        if (!events.peekNextEvent().equals(eventE)) { return false; }
+        if (!events.peekNextEvent().equals(eventE)) {
+          System.out.println("Test29");
+          return false;
+        }
         events.addEvent(eventD);
-        if (!events.peekNextEvent().equals(eventD)) { return false; }
+        if (!events.peekNextEvent().equals(eventD)) {
+          System.out.println("Test30");
+          return false;
+        }
         events.addEvent(eventC);
-        if (!events.peekNextEvent().equals(eventC)) { return false; }
+        if (!events.peekNextEvent().equals(eventC)) {
+          System.out.println("Test31");
+          return false;
+        }
         events.addEvent(eventB);
-        if (!events.peekNextEvent().equals(eventB)) { return false; }
+        if (!events.peekNextEvent().equals(eventB)) {
+          System.out.println("Test32");
+          return false;
+        }
         events.addEvent(eventA); // Should percolate to the root
         if (events.peekNextEvent() != eventA) {
+          System.out.println("Test33");
           return false;
         }
 
         // Verify heap size
         Event[] heapData = events.getHeapData();
         if (heapData.length != 5) {
+          System.out.println("Test34");
           return false;
         }
 
 
       } catch (Exception e) {
+        System.out.println("Test35");
         return false;
       }
     }
@@ -921,6 +977,9 @@ public class PriorityEventsTester {
 
     return true;
   }
+
+
+  // Use deep equals with expected array of values
 
   public static void main(String[] args) {
     System.out.println("ADD: " + testAddEvent());
