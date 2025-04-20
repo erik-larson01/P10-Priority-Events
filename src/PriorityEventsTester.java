@@ -351,6 +351,133 @@ public class PriorityEventsTester {
   }
   
   private static boolean testCompleteEventChronological() {
+    { // Test basic functionality for completeEvent
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[5];
+        events[0] = new Event("Event1", 10, 10, 0);
+        events[1] = new Event("Event2", 9, 12, 0);
+        events[2] = new Event("Event3", 11, 11, 0);
+        events[3] = new Event("Event4", 8, 5, 0);
+        events[4] = new Event("Event5", 10, 5, 0);
+        PriorityEvents queue = new PriorityEvents(events, 5);
+
+        // Verify initial state (minimum time should be at the root)
+        if (queue.isEmpty() || !queue.peekNextEvent().equals(events[3])) {
+          return false;
+        }
+
+        // Complete the first event
+        queue.completeEvent();
+
+        // Verify that the next event is now at the root
+        if (queue.peekNextEvent().equals(events[3])) {
+          return false;
+        }
+
+        // Verify that the completed event is in the completed array
+        Event[] completed = queue.getCompletedEvents();
+        if (completed.length != 1 || !completed[0].equals(events[3])) {
+          return false;
+        }
+
+        // Verify the size has decreased
+        Event[] heapData = queue.getHeapData();
+        if (heapData.length != 4) {
+          return false;
+        }
+
+        queue.completeEvent();
+        queue.completeEvent();
+        queue.completeEvent();
+
+        int size = queue.size();
+        if (queue.size() != 1) {
+          return false;
+        }
+
+        // Checks the formatting of the heap
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test completeEvent on empty queue
+      try {
+        PriorityEvents.sortChronologically();
+        PriorityEvents queue = new PriorityEvents(5);
+
+        try {
+          queue.completeEvent();
+          return false; // Should have thrown exception
+        } catch (IllegalStateException e) {
+          // Expected exception
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test completeEvent with full completed array
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[2];
+        events[0] = new Event("Event1", 10, 10, 0);
+        events[1] = new Event("Event2", 9, 12, 0);
+
+        // Create a queue with a small completed array
+        PriorityEvents queue = new PriorityEvents(events, 2);
+
+        for (int i = 0; i < events.length; i++) {
+          queue.completeEvent();
+        }
+
+        try {
+          queue.completeEvent();
+          return false; // Should have thrown exception
+        } catch (IllegalStateException e) {
+          // Expected exception
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test completeEvent with array constructor
+      try {
+        PriorityEvents.sortChronologically();
+
+        Event[] events = new Event[2];
+        events[0] = new Event("Event1", 10, 10, 0);
+        events[1] = new Event("Event2", 9, 12, 0);
+
+        PriorityEvents queue = new PriorityEvents(events, 2);
+        Event[] heapData = queue.getHeapData();
+
+        // Checks heap structure
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
+
+        queue.completeEvent();
+        queue.completeEvent();
+        Event[] completed = queue.getCompletedEvents();
+        if (completed.length != events.length) {
+          return false;
+        }
+        // Queue should now be empty
+        if (!queue.isEmpty()) {
+          return false;
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
     return true; // All tests passed
   }
   

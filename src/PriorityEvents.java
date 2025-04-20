@@ -140,7 +140,7 @@ public class PriorityEvents {
    * @return the number of Events in this priority queue
    */
   public int size() {
-    return heapData.length;
+    return size;
   }
 
   /**
