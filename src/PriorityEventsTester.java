@@ -390,7 +390,15 @@ public class PriorityEventsTester {
         }
 
         queue.completeEvent();
+        // Checks the formatting of the heap
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
         queue.completeEvent();
+        // Checks the formatting of the heap
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
         queue.completeEvent();
 
         int size = queue.size();
@@ -466,7 +474,15 @@ public class PriorityEventsTester {
         }
 
         queue.completeEvent();
+        // Checks the formatting of the heap
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
         queue.completeEvent();
+        // Checks the formatting of the heap
+        if (!isValidHeapChronologically(heapData)) {
+          return false;
+        }
         Event[] completed = queue.getCompletedEvents();
         if (completed.length != events.length) {
           return false;
