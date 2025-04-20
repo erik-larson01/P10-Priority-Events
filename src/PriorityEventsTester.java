@@ -17,6 +17,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+import java.util.NoSuchElementException;
+
 /**
  * Tester class for the CS300 P10 Priority Events project. You may add tester methods to this class
  * but they must be declared private; the existing public tester methods may use the output of these
@@ -490,7 +492,158 @@ public class PriorityEventsTester {
    * @return true if all tests pass; false otherwise
    */
   public static boolean testPeek() {
-    return false; // TODO
+    { // Test peek with array constructor chronologically
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[5];
+        events[0] = new Event("Event1", 10, 10, 0); // Day 10
+        events[1] = new Event("Event2", 9, 12, 0);  // Day 9
+        events[2] = new Event("Event3", 11, 11, 0); // Day 11
+        events[3] = new Event("Event4", 8, 5, 0);   // Day 8 (earliest)
+        events[4] = new Event("Event5", 10, 5, 0);  // Day 10
+
+        PriorityEvents queue = new PriorityEvents(events, 5);
+
+        if (queue.peekNextEvent() != events[3]) return false; // Day 8
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[1]) return false; // Day 9
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[4]) return false; // Day 10, earlier hour
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[0]) return false; // Day 10
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[2]) return false; // Day 11
+        queue.completeEvent();
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test peek with addEvent chronologically
+      try {
+        PriorityEvents.sortChronologically();
+        PriorityEvents queue = new PriorityEvents(5);
+
+        Event e1 = new Event("Event1", 10, 10, 0);
+        Event e2 = new Event("Event2", 9, 12, 0);
+        Event e3 = new Event("Event3", 11, 11, 0);
+        Event e4 = new Event("Event4", 8, 5, 0);
+        Event e5 = new Event("Event5", 10, 5, 0);
+
+        queue.addEvent(e1);
+        queue.addEvent(e2);
+        queue.addEvent(e3);
+        queue.addEvent(e4);
+        queue.addEvent(e5);
+
+        if (queue.peekNextEvent() != e4) return false; // Day 8
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e2) return false; // Day 9
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e5) return false; // Day 10, earlier hour
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e1) return false; // Day 10
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e3) return false; // Day 11
+        queue.completeEvent();
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test peek with array constructor alphabetically
+      try {
+        PriorityEvents.sortAlphabetically();
+        Event[] events = new Event[5];
+        events[0] = new Event("Event1", 10, 10, 0);
+        events[1] = new Event("Event2", 9, 12, 0);
+        events[2] = new Event("Event3", 11, 11, 0);
+        events[3] = new Event("Event4", 8, 5, 0);
+        events[4] = new Event("Event5", 10, 5, 0);
+
+        PriorityEvents queue = new PriorityEvents(events, 5);
+
+        if (queue.peekNextEvent() != events[0]) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[1]) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[2]) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[3]) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != events[4]) return false;
+        queue.completeEvent();
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test peek with addEvent alphabetically
+      try {
+        PriorityEvents.sortAlphabetically();
+        PriorityEvents queue = new PriorityEvents(5);
+
+        Event e1 = new Event("Event1", 10, 10, 0);
+        Event e2 = new Event("Event2", 9, 12, 0);
+        Event e3 = new Event("Event3", 11, 11, 0);
+        Event e4 = new Event("Event4", 8, 5, 0);
+        Event e5 = new Event("Event5", 10, 5, 0);
+
+        queue.addEvent(e1);
+        queue.addEvent(e2);
+        queue.addEvent(e3);
+        queue.addEvent(e4);
+        queue.addEvent(e5);
+
+        if (queue.peekNextEvent() != e1) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e2) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e3) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e4) return false;
+        queue.completeEvent();
+
+        if (queue.peekNextEvent() != e5) return false;
+        queue.completeEvent();
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test peek throws on empty queue
+      try {
+        PriorityEvents.sortAlphabetically();
+        PriorityEvents queue = new PriorityEvents(5);
+        queue.peekNextEvent(); // should throw
+        return false;
+      } catch (NoSuchElementException expected) {
+        // pass
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    return true; // All tests passed
   }
   
   /**
