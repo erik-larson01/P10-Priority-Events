@@ -500,6 +500,144 @@ public class PriorityEventsTester {
   }
   
   private static boolean testCompleteEventAlphabetical() {
+    { // Test basic functionality for completeEvent
+      try {
+        PriorityEvents.sortAlphabetically();
+        Event[] events = new Event[5];
+        events[0] = new Event("EventC", 10, 10, 0);
+        events[1] = new Event("EventB", 9, 12, 0);
+        events[2] = new Event("EventE", 11, 11, 0);
+        events[3] = new Event("EventA", 8, 5, 0);
+        events[4] = new Event("EventD", 10, 5, 0);
+        PriorityEvents queue = new PriorityEvents(events, 5);
+
+        // Verify initial state (alphabetically first event should be at root)
+        if (queue.isEmpty() || !queue.peekNextEvent().equals(events[3])) {
+          return false;
+        }
+
+        // Complete the first event
+        queue.completeEvent();
+
+        // Verify that the next event is now at the root
+        if (queue.peekNextEvent().equals(events[3])) {
+          return false; // Should no longer be the same event
+        }
+
+        // Verify that the completed event is in the completed array
+        Event[] completed = queue.getCompletedEvents();
+        if (completed.length != 1 || !completed[0].equals(events[3]) || !completed[0].isComplete()) {
+          return false;
+        }
+
+        // Verify the size has decreased
+        Event[] heapData = queue.getHeapData();
+        if (heapData.length != 4) {
+          return false;
+        }
+
+        // Check if heap property is maintained after removal (alphabetical ordering)
+        if (!isValidHeapAlphabetically(heapData)) {
+          return false;
+        }
+
+        queue.completeEvent();
+        if (!isValidHeapAlphabetically(heapData)) {
+          return false;
+        }
+
+        queue.completeEvent();
+        if (!isValidHeapAlphabetically(heapData)) {
+          return false;
+        }
+
+        // Check size
+        if (queue.size() != 2) {
+          return false;
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test completeEvent with multiple events (alphabetical)
+      try {
+        PriorityEvents.sortAlphabetically();
+        PriorityEvents queue = new PriorityEvents(5);
+
+        Event event1 = new Event("EventC", 10, 10, 0);
+        Event event2 = new Event("EventB", 9, 12, 0);
+        Event event3 = new Event("EventA", 8, 5, 0);
+        Event[] heapData = queue.getHeapData();
+
+        queue.addEvent(event1);
+        queue.addEvent(event2);
+        queue.addEvent(event3);
+
+        // Complete the first event
+        queue.completeEvent();
+
+        // Check for valid ordering of the heap
+        if (!isValidHeapAlphabetically(heapData)) {
+          return false;
+        }
+        queue.completeEvent();
+
+        if (!isValidHeapAlphabetically(heapData)) {
+          return false;
+        }
+        queue.completeEvent();
+
+        Event[] completed = queue.getCompletedEvents();
+        if (completed.length != 3) {
+          return false;
+        }
+        // Queue should now be empty
+        if (!queue.isEmpty()) {
+          return false;
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test clearCompletedEvents
+      try {
+        PriorityEvents.sortAlphabetically();
+        PriorityEvents queue = new PriorityEvents(5);
+
+        Event event1 = new Event("EventC", 10, 10, 0);
+        Event event2 = new Event("EventA", 9, 12, 0);
+
+        queue.addEvent(event1);
+        queue.addEvent(event2);
+
+        queue.completeEvent();
+
+        // Verify completed array has one element
+        Event[] completed = queue.getCompletedEvents();
+        if (completed.length != 1) {
+          return false;
+        }
+
+        // Clear completed events
+        Event[] clearedEvents = queue.clearCompletedEvents();
+
+        // Verify the returned array has the expected events
+        if (clearedEvents.length != 1 || !clearedEvents[0].equals(event2)) {
+          return false;
+        }
+
+        // Verify the completed array is now empty
+        completed = queue.getCompletedEvents();
+        if (completed.length != 0) {
+          return false;
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
     return true; // All tests passed
   }
   
