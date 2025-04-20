@@ -831,6 +831,30 @@ public class PriorityEventsTester {
    * @return true if all tests pass; false otherwise
    */
   public static boolean testHeapify() {
+    { // Tests that heapify will throw an exception if an event is already completed
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[2];
+        events[0] = new Event("Event1", 10, 10, 0);
+        events[1] = new Event("Event2", 9, 12, 0);
+
+        // Create a queue with a small completed array
+        PriorityEvents queue = new PriorityEvents(events, 2);
+
+        for (int i = 0; i < events.length; i++) {
+          queue.completeEvent();
+        }
+
+        try {
+          queue.completeEvent();
+          return false; // Should have thrown exception
+        } catch (IllegalStateException e) {
+          // Expected exception
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
     { // Test heapify with 0 elements
       try {
         PriorityEvents.sortChronologically();
