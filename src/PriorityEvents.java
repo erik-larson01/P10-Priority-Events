@@ -53,7 +53,7 @@ public class PriorityEvents {
    * Indicates whether the events in this priority queue should be arranged in heap order with
    * respect to their timestamps (using Event.compareTo()) or alphabetically by their descriptions
    */
-  private static boolean sortAlphabetically = false;
+  private static boolean sortAlphabetically;
 
   /**
    * Creates a new priority queue of events, initializing all data fields accordingly
@@ -144,15 +144,23 @@ public class PriorityEvents {
   }
 
   /**
+   * Accesses the number of events in the completed array
+   * @return the number of Events in the completed array
+   */
+  public int numCompleted() {
+    return completedSize;
+  }
+
+  /**
    * Returns a deep copy of the completed array, and empties out the array
    *
    * @return a deep copy of the contents of the completed array before clearing it out
    */
   public Event[] clearCompletedEvents() {
-    Event[] copy = Arrays.copyOf(completed, completedSize);
+    Event[] copy = Arrays.copyOf(completed, completed.length);
     completedSize = 0;
 
-    Arrays.fill(completed, null);
+    completed = new Event[heapData.length * 2];
     return copy;
   }
 
@@ -162,7 +170,7 @@ public class PriorityEvents {
    * @return a deep copy of the contents of the completed array
    */
   protected Event[] getCompletedEvents() {
-    return Arrays.copyOf(completed, completedSize);
+    return Arrays.copyOf(completed, completed.length);
   }
 
   /**
@@ -185,7 +193,7 @@ public class PriorityEvents {
    * @return a deep copy of the heapData array
    */
   protected Event[] getHeapData() {
-    return Arrays.copyOf(heapData, size);
+    return Arrays.copyOf(heapData, heapData.length);
   }
 
   /**
