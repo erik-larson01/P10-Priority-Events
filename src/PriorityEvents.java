@@ -53,7 +53,7 @@ public class PriorityEvents {
    * Indicates whether the events in this priority queue should be arranged in heap order with
    * respect to their timestamps (using Event.compareTo()) or alphabetically by their descriptions
    */
-  private static boolean sortAlphabetically;
+  private static boolean sortAlphabetically = false;
 
   /**
    * Creates a new priority queue of events, initializing all data fields accordingly
@@ -68,7 +68,6 @@ public class PriorityEvents {
     heapData = new Event[capacity];
     this.size = 0;
     completed = new Event[capacity * 2];
-    sortAlphabetically = false;
   }
 
   /**
@@ -93,7 +92,6 @@ public class PriorityEvents {
     this.size = size;
     this.completed = new Event[events.length * 2];
     this.completedSize = 0;
-    sortAlphabetically = false;
 
     // Heapify the array to maintain the order
     heapify((size - 2) / 2);
@@ -114,14 +112,15 @@ public class PriorityEvents {
    * Sets all priority queues to be sorted alphabetically.
    */
   public static void sortAlphabetically() {
-    sortAlphabetically = true;
+    PriorityEvents.sortAlphabetically = true;
   }
 
   /**
    * Sets all priority queues to be sorted chronoloically (i.e., not alphabetically).
    */
   public static void sortChronologically() {
-    sortAlphabetically = false;
+    PriorityEvents.sortAlphabetically = false;
+
   }
 
   /**
@@ -210,7 +209,8 @@ public class PriorityEvents {
 
     // Add the element at the end of the heap and percolate it up to restore the correct ordering
     heapData[size] = e;
-    percolateUp(size);
+    size++;
+    percolateUp(size - 1);
   }
 
   /**
@@ -239,7 +239,7 @@ public class PriorityEvents {
     // Boolean to store result of compareTo
     boolean swap;
 
-    if (sortAlphabetically) {
+    if (PriorityEvents.isSortedAlphabetically()) {
       swap = heapData[i].getDescription().compareTo(heapData[parentIndex].getDescription()) < 0;
     } else {
       swap = heapData[i].compareTo(heapData[parentIndex]) < 0;
@@ -276,7 +276,7 @@ public class PriorityEvents {
     if (leftChild < size) {
       boolean leftIsSmaller;
       // Compares the left child to the current smallest element
-      if (sortAlphabetically) {
+      if (PriorityEvents.isSortedAlphabetically()) {
         leftIsSmaller =
             heapData[leftChild].getDescription().compareTo(heapData[smallest].getDescription()) < 0;
       } else {
@@ -293,7 +293,7 @@ public class PriorityEvents {
     if (rightChild < size) {
       boolean rightIsSmaller;
       // Compares the right child to the current smallest element (could be the left child)
-      if (sortAlphabetically) {
+      if (PriorityEvents.isSortedAlphabetically()) {
         rightIsSmaller = heapData[rightChild].getDescription()
             .compareTo(heapData[smallest].getDescription()) < 0;
       } else {
