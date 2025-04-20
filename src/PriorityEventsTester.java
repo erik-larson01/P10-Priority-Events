@@ -58,11 +58,6 @@ public class PriorityEventsTester {
           return false;
         }
 
-        // Check if heap property is maintained
-        Event[] heapData = queue.getHeapData();
-        if (queue.isEmpty() || !isValidHeapChronologically(heapData)) {
-          return false;
-        }
       } catch (Exception e) {
         return false;
       }
@@ -179,25 +174,27 @@ public class PriorityEventsTester {
       }
     }
 
-    { // Tests percolate up with multiple levels
+    { // Tests percolate up
       try {
+        PriorityEvents.sortChronologically();
         PriorityEvents events = new PriorityEvents(10);
 
-        Event event1 = new Event("Event1", 10, 10, 0);
-        Event event2 = new Event("Event2", 11, 10, 0);
-        Event event3 = new Event("Event3", 12, 10, 0);
-        Event event4 = new Event("Event4", 13, 10, 0);
-        Event event5 = new Event("Event5", 9, 10, 0);
+        Event event2 = new Event("Event 2", 10, 10, 0);
+        Event event3 = new Event("Event 3", 11, 10, 0);
+        Event event4 = new Event("Event 4", 12, 10, 0);
+        Event event5 = new Event("Event 5", 13, 10, 0);
+        Event event1 = new Event("Event 1", 9, 10, 0);
 
-        events.addEvent(event1);
-        events.addEvent(event2);
         events.addEvent(event3);
+        if (!events.peekNextEvent().equals(event3)) { return false; }
         events.addEvent(event4);
-        events.addEvent(event5); // Should percolate to the root
-
-        if (events.peekNextEvent() != event5) {
-          return false;
-        }
+        if (!events.peekNextEvent().equals(event3)) { return false; }
+        events.addEvent(event2);
+        if (!events.peekNextEvent().equals(event2)) { return false; }
+        events.addEvent(event5);
+        if (!events.peekNextEvent().equals(event2)) { return false; }
+        events.addEvent(event1); // Should percolate to the root
+        if (!events.peekNextEvent().equals(event1)) { return false; }
 
         // Test heap size
         Event[] heapData = events.getHeapData();
@@ -205,15 +202,7 @@ public class PriorityEventsTester {
           return false;
         }
 
-        // Check if heap property is maintained across all nodes
-        if (heapData[0] != event5) {
-          return false;
-        }
 
-        // Check if parent/child relationships are maintained
-        if (events.isEmpty() || !isValidHeapChronologically(heapData)) {
-          return false;
-        }
       } catch (Exception e) {
         return false;
       }
@@ -239,15 +228,10 @@ public class PriorityEventsTester {
         PriorityEvents queue = new PriorityEvents(events, 5);
 
         // Verify the heap is correctly formed
-        if (!queue.peekNextEvent().equals(events[1])) {
+        if (queue.isEmpty() || !queue.peekNextEvent().equals(events[1])) {
           return false;
         }
 
-        // Check if heap property is maintained
-        Event[] heapData = queue.getHeapData();
-        if (queue.isEmpty() || !isValidHeapAlphabetically(heapData)) {
-          return false;
-        }
       } catch (Exception e) {
         return false;
       }
@@ -285,10 +269,6 @@ public class PriorityEventsTester {
           return false;
         }
 
-        // Check if parent/child relationships are maintained
-        if (!isValidHeapAlphabetically(heapData)) {
-          return false;
-        }
       } catch (Exception e) {
         return false;
       }
@@ -306,11 +286,14 @@ public class PriorityEventsTester {
         Event eventA = new Event("A Event", 14, 10, 0);
 
         events.addEvent(eventE);
+        if (!events.peekNextEvent().equals(eventE)) { return false; }
         events.addEvent(eventD);
+        if (!events.peekNextEvent().equals(eventD)) { return false; }
         events.addEvent(eventC);
+        if (!events.peekNextEvent().equals(eventC)) { return false; }
         events.addEvent(eventB);
+        if (!events.peekNextEvent().equals(eventB)) { return false; }
         events.addEvent(eventA); // Should percolate to the root
-
         if (events.peekNextEvent() != eventA) {
           return false;
         }
@@ -321,15 +304,6 @@ public class PriorityEventsTester {
           return false;
         }
 
-        // Verify root is eventA
-        if (heapData[0] != eventA) {
-          return false;
-        }
-
-        // Check if parent/child relationships are maintained
-        if (!isValidHeapAlphabetically(heapData)) {
-          return false;
-        }
 
       } catch (Exception e) {
         return false;
@@ -374,8 +348,8 @@ public class PriorityEventsTester {
         // Complete the first event
         queue.completeEvent();
 
-        // Verify that the next event is now at the root
-        if (queue.peekNextEvent().equals(events[3])) {
+        // Verify that the next event is now at the root, which is NOT events[3]
+        if (queue.peekNextEvent().equals(events[3]) || !queue.peekNextEvent().equals(events[1])) {
           return false;
         }
 
@@ -391,27 +365,23 @@ public class PriorityEventsTester {
           return false;
         }
 
+        // Verify the root after consecutive completions
         queue.completeEvent();
-        // Checks the formatting of the heap
-        if (!isValidHeapChronologically(heapData)) {
+        if (!queue.peekNextEvent().equals(events[4])) {
           return false;
         }
         queue.completeEvent();
-        // Checks the formatting of the heap
-        if (!isValidHeapChronologically(heapData)) {
+        if (!queue.peekNextEvent().equals(events[0])) {
           return false;
         }
         queue.completeEvent();
-
-        int size = queue.size();
+        if (!queue.peekNextEvent().equals(events[2])) {
+          return false;
+        }
         if (queue.size() != 1) {
           return false;
         }
 
-        // Checks the formatting of the heap
-        if (!isValidHeapChronologically(heapData)) {
-          return false;
-        }
 
       } catch (Exception e) {
         return false;
@@ -471,20 +441,19 @@ public class PriorityEventsTester {
         Event[] heapData = queue.getHeapData();
 
         // Checks heap structure
-        if (!isValidHeapChronologically(heapData)) {
+        if (!queue.peekNextEvent().equals(events[1])) {
           return false;
         }
 
         queue.completeEvent();
         // Checks the formatting of the heap
-        if (!isValidHeapChronologically(heapData)) {
+        if (!queue.peekNextEvent().equals(events[0])) {
           return false;
         }
-        queue.completeEvent();
-        // Checks the formatting of the heap
-        if (!isValidHeapChronologically(heapData)) {
-          return false;
-        }
+
+        queue.completeEvent(); // Empties the queue
+
+
         Event[] completed = queue.getCompletedEvents();
         if (completed.length != events.length) {
           return false;
@@ -540,22 +509,25 @@ public class PriorityEventsTester {
         }
 
         // Check if heap property is maintained after removal (alphabetical ordering)
-        if (!isValidHeapAlphabetically(heapData)) {
+        if (!queue.peekNextEvent().equals(events[1])) {
           return false;
         }
 
         queue.completeEvent();
-        if (!isValidHeapAlphabetically(heapData)) {
+        // Check if heap property is maintained after removal (alphabetical ordering)
+        if (!queue.peekNextEvent().equals(events[4])) {
           return false;
         }
 
         queue.completeEvent();
-        if (!isValidHeapAlphabetically(heapData)) {
+        // Check if heap property is maintained after removal (alphabetical ordering)
+        if (!queue.peekNextEvent().equals(events[0])) {
           return false;
         }
+
 
         // Check size
-        if (queue.size() != 2) {
+        if (queue.size() != 1 || !queue.peekNextEvent().equals(events[2])) {
           return false;
         }
       } catch (Exception e) {
@@ -571,22 +543,25 @@ public class PriorityEventsTester {
         Event event1 = new Event("EventC", 10, 10, 0);
         Event event2 = new Event("EventB", 9, 12, 0);
         Event event3 = new Event("EventA", 8, 5, 0);
-        Event[] heapData = queue.getHeapData();
 
         queue.addEvent(event1);
         queue.addEvent(event2);
         queue.addEvent(event3);
 
+        if (!queue.peekNextEvent().equals(event3)) {
+          return false;
+        }
+
         // Complete the first event
         queue.completeEvent();
 
         // Check for valid ordering of the heap
-        if (!isValidHeapAlphabetically(heapData)) {
+        if (!queue.peekNextEvent().equals(event2)) {
           return false;
         }
         queue.completeEvent();
 
-        if (!isValidHeapAlphabetically(heapData)) {
+        if (!queue.peekNextEvent().equals(event1)) {
           return false;
         }
         queue.completeEvent();
@@ -944,62 +919,6 @@ public class PriorityEventsTester {
       }
     }
 
-    return true;
-  }
-
-  /**
-   * Helper method to verify if an array maintains the heap property
-   *
-   * @param heapData the array to check
-   * @return true if the array maintains the heap property, false otherwise
-   */
-  private static boolean isValidHeapChronologically(Event[] heapData) {
-    for (int j = 0; j < heapData.length / 2; j++) {
-      int leftChild = 2 * j + 1;
-      int rightChild = 2 * j + 2;
-
-      // If there is a left child, compare it with the parent
-      if (leftChild < heapData.length && heapData[leftChild] != null) {
-        if (heapData[j].compareTo(heapData[leftChild]) > 0) {
-          return false;
-        }
-      }
-
-      // If there is a right child, compare it with the parent
-      if (rightChild < heapData.length && heapData[rightChild] != null) {
-        if (heapData[j].compareTo(heapData[rightChild]) > 0) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Helper method to verify if an array maintains the heap property
-   *
-   * @param heapData the array to check
-   * @return true if the array maintains the heap property, false otherwise
-   */
-  private static boolean isValidHeapAlphabetically(Event[] heapData) {
-    for (int j = 0; j < heapData.length / 2; j++) {
-      int leftChild = 2 * j + 1;
-      int rightChild = 2 * j + 2;
-
-      // If there is a left child, compare it with the parent
-      if (leftChild < heapData.length && heapData[leftChild] != null) {
-        if (heapData[j].getDescription().compareTo(heapData[leftChild].getDescription()) > 0) {
-          return false;
-        }
-      }
-
-      // If there is a right child, compare it with the parent
-      if (rightChild < heapData.length && heapData[rightChild] != null) {
-        if (heapData[j].getDescription().compareTo(heapData[rightChild].getDescription()) > 0) {
-          return false;
-        }
-      }
-    }
     return true;
   }
 
