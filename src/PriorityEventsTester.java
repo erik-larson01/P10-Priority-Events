@@ -25,11 +25,12 @@ import java.util.NoSuchElementException;
  * private testers to help determine their output (as with testAddEvent or testCompleteEvent).
  */
 public class PriorityEventsTester {
-  
+
   /**
-   * This method runs all sub-testers related to testing adding an Event to the priority queue.
-   * You may wish to add additional output for clarity, or additional private tester methods related
-   * to adding Events.
+   * This method runs all sub-testers related to testing adding an Event to the priority queue. You
+   * may wish to add additional output for clarity, or additional private tester methods related to
+   * adding Events.
+   *
    * @return true if all tests relating to adding an Event to a priority queue pass; false otherwise
    */
   public static boolean testAddEvent() {
@@ -38,7 +39,7 @@ public class PriorityEventsTester {
     testAdd &= testAddEventAlphabetical();
     return testAdd;
   }
-  
+
   private static boolean testAddEventChronological() {
     { // Test basic functionality for constructor with array parameter
       try {
@@ -220,7 +221,7 @@ public class PriorityEventsTester {
 
     return true; // All tests passed
   }
-  
+
   private static boolean testAddEventAlphabetical() {
     { // Test basic functionality for constructor with array parameter
       try {
@@ -337,12 +338,13 @@ public class PriorityEventsTester {
 
     return true; // All tests passed
   }
-  
+
   /**
    * This method runs all sub-testers related to testing marking an Event in the priority queue as
-   * completed. You may wish to add additional output for clarity, or additional private tester 
+   * completed. You may wish to add additional output for clarity, or additional private tester
    * methods related to marking Events as completed.
-   * @return true if all tests relating to removing an Event from a priority queue pass; false 
+   *
+   * @return true if all tests relating to removing an Event from a priority queue pass; false
    * otherwise
    */
   public static boolean testCompleteEvent() {
@@ -351,7 +353,7 @@ public class PriorityEventsTester {
     testComplete &= testCompleteEventAlphabetical();
     return testComplete;
   }
-  
+
   private static boolean testCompleteEventChronological() {
     { // Test basic functionality for completeEvent
       try {
@@ -498,7 +500,7 @@ public class PriorityEventsTester {
 
     return true; // All tests passed
   }
-  
+
   private static boolean testCompleteEventAlphabetical() {
     { // Test basic functionality for completeEvent
       try {
@@ -526,7 +528,8 @@ public class PriorityEventsTester {
 
         // Verify that the completed event is in the completed array
         Event[] completed = queue.getCompletedEvents();
-        if (completed.length != 1 || !completed[0].equals(events[3]) || !completed[0].isComplete()) {
+        if (completed.length != 1 || !completed[0].equals(
+            events[3]) || !completed[0].isComplete()) {
           return false;
         }
 
@@ -640,9 +643,10 @@ public class PriorityEventsTester {
 
     return true; // All tests passed
   }
-  
+
   /**
    * Verifies the peekNextEvent() method. You may wish to break this out into smaller sub-testers.
+   *
    * @return true if all tests pass; false otherwise
    */
   public static boolean testPeek() {
@@ -658,19 +662,24 @@ public class PriorityEventsTester {
 
         PriorityEvents queue = new PriorityEvents(events, 5);
 
-        if (queue.peekNextEvent() != events[3]) return false; // Day 8
+        if (queue.peekNextEvent() != events[3])
+          return false; // Day 8
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[1]) return false; // Day 9
+        if (queue.peekNextEvent() != events[1])
+          return false; // Day 9
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[4]) return false; // Day 10, earlier hour
+        if (queue.peekNextEvent() != events[4])
+          return false; // Day 10, earlier hour
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[0]) return false; // Day 10
+        if (queue.peekNextEvent() != events[0])
+          return false; // Day 10
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[2]) return false; // Day 11
+        if (queue.peekNextEvent() != events[2])
+          return false; // Day 11
         queue.completeEvent();
 
       } catch (Exception e) {
@@ -695,19 +704,24 @@ public class PriorityEventsTester {
         queue.addEvent(e4);
         queue.addEvent(e5);
 
-        if (queue.peekNextEvent() != e4) return false; // Day 8
+        if (queue.peekNextEvent() != e4)
+          return false; // Day 8
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e2) return false; // Day 9
+        if (queue.peekNextEvent() != e2)
+          return false; // Day 9
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e5) return false; // Day 10, earlier hour
+        if (queue.peekNextEvent() != e5)
+          return false; // Day 10, earlier hour
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e1) return false; // Day 10
+        if (queue.peekNextEvent() != e1)
+          return false; // Day 10
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e3) return false; // Day 11
+        if (queue.peekNextEvent() != e3)
+          return false; // Day 11
         queue.completeEvent();
 
       } catch (Exception e) {
@@ -727,19 +741,24 @@ public class PriorityEventsTester {
 
         PriorityEvents queue = new PriorityEvents(events, 5);
 
-        if (queue.peekNextEvent() != events[0]) return false;
+        if (queue.peekNextEvent() != events[0])
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[1]) return false;
+        if (queue.peekNextEvent() != events[1])
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[2]) return false;
+        if (queue.peekNextEvent() != events[2])
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[3]) return false;
+        if (queue.peekNextEvent() != events[3])
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != events[4]) return false;
+        if (queue.peekNextEvent() != events[4])
+          return false;
         queue.completeEvent();
 
       } catch (Exception e) {
@@ -764,19 +783,24 @@ public class PriorityEventsTester {
         queue.addEvent(e4);
         queue.addEvent(e5);
 
-        if (queue.peekNextEvent() != e1) return false;
+        if (queue.peekNextEvent() != e1)
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e2) return false;
+        if (queue.peekNextEvent() != e2)
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e3) return false;
+        if (queue.peekNextEvent() != e3)
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e4) return false;
+        if (queue.peekNextEvent() != e4)
+          return false;
         queue.completeEvent();
 
-        if (queue.peekNextEvent() != e5) return false;
+        if (queue.peekNextEvent() != e5)
+          return false;
         queue.completeEvent();
 
       } catch (Exception e) {
@@ -799,18 +823,109 @@ public class PriorityEventsTester {
 
     return true; // All tests passed
   }
-  
+
   /**
    * Verifies the overloaded PriorityEvents constructor that creates a valid heap from an input
    * array of values. You may wish to break this out into smaller sub-testers.
+   *
    * @return true if all tests pass; false otherwise
    */
   public static boolean testHeapify() {
-    return false; // TODO
+    { // Test heapify with 0 elements
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[0];
+        PriorityEvents queue = new PriorityEvents(events, 0);
+
+        if (!queue.isEmpty()) {
+          return false;
+        }
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test heapify with 1 element
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[1];
+        events[0] = new Event("Solo", 5, 5, 0);
+
+        PriorityEvents queue = new PriorityEvents(events, 1);
+        if (queue.isEmpty() || queue.size() != 1 || queue.peekNextEvent() != events[0]) {
+          return false;
+        }
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test valid heapify with multiple elements chronologically
+      try {
+        PriorityEvents.sortChronologically();
+        Event[] events = new Event[4];
+        events[0] = new Event("Event1", 10, 12, 0);
+        events[1] = new Event("Event2", 8, 11, 0);
+        events[2] = new Event("Event3", 9, 9, 30);
+        events[3] = new Event("Event4", 10, 8, 0);
+
+        PriorityEvents queue = new PriorityEvents(events, 4);
+
+        // Check that the heapify was in the correct order
+        if (queue.peekNextEvent() != events[1])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[2])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[3])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[0])
+          return false;
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    { // Test valid heapify with multiple elements alphabetically
+      try {
+        PriorityEvents.sortAlphabetically();
+        Event[] events = new Event[4];
+        events[0] = new Event("D Event", 10, 12, 0);
+        events[1] = new Event("A Event", 8, 11, 0);
+        events[2] = new Event("C Event", 9, 9, 30);
+        events[3] = new Event("B Event", 10, 8, 0);
+
+        PriorityEvents queue = new PriorityEvents(events, 4);
+
+        // Check that the heapify was in the correct order
+        if (queue.peekNextEvent() != events[1])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[3])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[2])
+          return false;
+        queue.completeEvent();
+        if (queue.peekNextEvent() != events[0])
+          return false;
+
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
    * Helper method to verify if an array maintains the heap property
+   *
    * @param heapData the array to check
    * @return true if the array maintains the heap property, false otherwise
    */
@@ -819,12 +934,14 @@ public class PriorityEventsTester {
       int leftChild = 2 * j + 1;
       int rightChild = 2 * j + 2;
 
+      // If there is a left child, compare it with the parent
       if (leftChild < heapData.length && heapData[leftChild] != null) {
         if (heapData[j].compareTo(heapData[leftChild]) > 0) {
           return false;
         }
       }
 
+      // If there is a right child, compare it with the parent
       if (rightChild < heapData.length && heapData[rightChild] != null) {
         if (heapData[j].compareTo(heapData[rightChild]) > 0) {
           return false;
@@ -836,6 +953,7 @@ public class PriorityEventsTester {
 
   /**
    * Helper method to verify if an array maintains the heap property
+   *
    * @param heapData the array to check
    * @return true if the array maintains the heap property, false otherwise
    */
@@ -844,12 +962,14 @@ public class PriorityEventsTester {
       int leftChild = 2 * j + 1;
       int rightChild = 2 * j + 2;
 
+      // If there is a left child, compare it with the parent
       if (leftChild < heapData.length && heapData[leftChild] != null) {
         if (heapData[j].getDescription().compareTo(heapData[leftChild].getDescription()) > 0) {
           return false;
         }
       }
 
+      // If there is a right child, compare it with the parent
       if (rightChild < heapData.length && heapData[rightChild] != null) {
         if (heapData[j].getDescription().compareTo(heapData[rightChild].getDescription()) > 0) {
           return false;
@@ -860,10 +980,10 @@ public class PriorityEventsTester {
   }
 
   public static void main(String[] args) {
-    System.out.println("ADD: "+testAddEvent());
-    System.out.println("COMPLETE: "+testCompleteEvent());
-    System.out.println("PEEK: "+testPeek());
-    System.out.println("HEAPIFY: "+testHeapify());
+    System.out.println("ADD: " + testAddEvent());
+    System.out.println("COMPLETE: " + testCompleteEvent());
+    System.out.println("PEEK: " + testPeek());
+    System.out.println("HEAPIFY: " + testHeapify());
   }
 
 }
