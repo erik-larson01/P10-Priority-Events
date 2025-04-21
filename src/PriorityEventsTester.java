@@ -411,13 +411,12 @@ public class PriorityEventsTester {
 
         // Verify that the completed event is in the completed array
         Event[] completed = queue.getCompletedEvents();
-        if (completed.length != 1 || !completed[0].equals(events[3])) {
+        if (queue.numCompleted() != 1 || !completed[0].equals(events[3])) {
           return false;
         }
 
         // Verify the size has decreased
-        Event[] heapData = queue.getHeapData();
-        if (heapData.length != 4) {
+        if (queue.size() != 4) {
           return false;
         }
 
@@ -510,8 +509,7 @@ public class PriorityEventsTester {
         queue.completeEvent(); // Empties the queue
 
 
-        Event[] completed = queue.getCompletedEvents();
-        if (completed.length != events.length) {
+        if (queue.numCompleted() != events.length) {
           return false;
         }
         // Queue should now be empty
@@ -531,11 +529,11 @@ public class PriorityEventsTester {
       try {
         PriorityEvents.sortAlphabetically();
         Event[] events = new Event[5];
-        events[0] = new Event("EventC", 10, 10, 0);
-        events[1] = new Event("EventB", 9, 12, 0);
-        events[2] = new Event("EventE", 11, 11, 0);
-        events[3] = new Event("EventA", 8, 5, 0);
-        events[4] = new Event("EventD", 10, 5, 0);
+        events[0] = new Event("Event C", 11, 10, 0);
+        events[1] = new Event("Event B", 9, 12, 0);
+        events[2] = new Event("Event E", 12, 11, 0);
+        events[3] = new Event("Event A", 8, 5, 0);
+        events[4] = new Event("Event D", 10, 5, 0);
         PriorityEvents queue = new PriorityEvents(events, 5);
 
         // Verify initial state (alphabetically first event should be at root)
@@ -553,14 +551,13 @@ public class PriorityEventsTester {
 
         // Verify that the completed event is in the completed array
         Event[] completed = queue.getCompletedEvents();
-        if (completed.length != 1 || !completed[0].equals(
-            events[3]) || !completed[0].isComplete()) {
+        if (queue.numCompleted() != 1
+            || !completed[0].equals(events[3]) || !completed[0].isComplete()) {
           return false;
         }
 
         // Verify the size has decreased
-        Event[] heapData = queue.getHeapData();
-        if (heapData.length != 4) {
+        if (queue.size() != 4) {
           return false;
         }
 
@@ -571,16 +568,16 @@ public class PriorityEventsTester {
 
         queue.completeEvent();
         // Check if heap property is maintained after removal (alphabetical ordering)
-        if (!queue.peekNextEvent().equals(events[4])) {
+        if (!queue.peekNextEvent().equals(events[0])) {
           return false;
         }
 
         queue.completeEvent();
         // Check if heap property is maintained after removal (alphabetical ordering)
-        if (!queue.peekNextEvent().equals(events[0])) {
+        if (!queue.peekNextEvent().equals(events[4])) {
           return false;
         }
-
+        queue.completeEvent();
 
         // Check size
         if (queue.size() != 1 || !queue.peekNextEvent().equals(events[2])) {
@@ -622,8 +619,7 @@ public class PriorityEventsTester {
         }
         queue.completeEvent();
 
-        Event[] completed = queue.getCompletedEvents();
-        if (completed.length != 3) {
+        if (queue.numCompleted()!= 3) {
           return false;
         }
         // Queue should now be empty
@@ -638,7 +634,7 @@ public class PriorityEventsTester {
     { // Test clearCompletedEvents
       try {
         PriorityEvents.sortAlphabetically();
-        PriorityEvents queue = new PriorityEvents(5);
+        PriorityEvents queue = new PriorityEvents(2);
 
         Event event1 = new Event("EventC", 10, 10, 0);
         Event event2 = new Event("EventA", 9, 12, 0);
@@ -649,8 +645,7 @@ public class PriorityEventsTester {
         queue.completeEvent();
 
         // Verify completed array has one element
-        Event[] completed = queue.getCompletedEvents();
-        if (completed.length != 1) {
+        if (queue.numCompleted() != 1) {
           return false;
         }
 
@@ -658,13 +653,12 @@ public class PriorityEventsTester {
         Event[] clearedEvents = queue.clearCompletedEvents();
 
         // Verify the returned array has the expected events
-        if (clearedEvents.length != 1 || !clearedEvents[0].equals(event2)) {
+        if (!clearedEvents[0].equals(event2)) {
           return false;
         }
 
         // Verify the completed array is now empty
-        completed = queue.getCompletedEvents();
-        if (completed.length != 0) {
+        if (queue.numCompleted() != 0) {
           return false;
         }
       } catch (Exception e) {
