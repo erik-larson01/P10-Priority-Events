@@ -354,15 +354,14 @@ public class PriorityEvents {
    * their corresponding sizes
    */
   protected PriorityEvents deepCopy() {
-    PriorityEvents deepCopy = new PriorityEvents(this.heapData.length);
+    PriorityEvents deepCopy = new PriorityEvents(getHeapData(), size);
 
-    // Copy sizes
-    deepCopy.size = this.size;
-    deepCopy.completedSize = this.completedSize;
+    // Get completed array from the queue
+    Event[] copyCompleted = getCompletedEvents();
 
     // Copy references
-    deepCopy.heapData = Arrays.copyOf(this.heapData, this.heapData.length);
-    deepCopy.completed = Arrays.copyOf(this.completed, this.completed.length);
+    deepCopy.completed = Arrays.copyOf(copyCompleted, copyCompleted.length);
+    deepCopy.completedSize = completedSize;
 
     return deepCopy;
   }
@@ -378,8 +377,9 @@ public class PriorityEvents {
     PriorityEvents copy = deepCopy();
     StringBuilder result = new StringBuilder();
 
-    for (int i = 0; i < copy.size; i++) {
-      result.append(copy.heapData[i].toString()).append("\n");
+    while (!copy.isEmpty()) {
+      Event best = copy.removeBest();
+      result.append(best.toString()).append("\n");
     }
 
     return result.toString().trim();
@@ -440,5 +440,27 @@ public class PriorityEvents {
     percolateDown(i);
     // Recursive case, decrement index and heapify again
     heapify(i - 1);
+  }
+
+  /**
+   * Helper method for toString's heap sort
+   * @return the event at the root
+   * @throws IllegalStateException if queue is empty
+   */
+  private Event removeBest() {
+    if (isEmpty()) {
+      throw new IllegalStateException();
+    }
+
+    // Get root to return
+    Event nextEvent = heapData[0];
+
+    // Move last element in the heap to the root and percolate down
+    heapData[0] = heapData[size - 1];
+    heapData[size - 1] = null;
+    size--;
+    percolateDown(0);
+
+    return nextEvent;
   }
 }
